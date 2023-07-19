@@ -26,6 +26,16 @@ app.get('/', (req, res) => {
 })
 
 // Retrieve all users
+app.get('/users', async (req, res) => {
+  try {
+    const user = await knex('users').select();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred retrieving users.' });
+  }
+});
+
+
 app.get('/users/:id', async (req, res) => {
   const {id} = req.params
   try {
@@ -39,6 +49,65 @@ app.get('/users/:id', async (req, res) => {
     }
 })
 
+// Create a new user
+app.post('/users', async (req, res) => {
+  const { first_name, last_name, username } = req.body;
+  // const hashedPass = await bcrypt.hashsync(password, 10)
+    try{
+      const newUser = {
+        // id: BigInt(id),
+        first_name: first_name,
+        last_name: last_name,
+        username: username
+        // role_id: role_id
+        // password: hashedPass
+      };
+
+      let [addedUser] = await knex('users')
+      .insert(newUser)
+      .returning('*');
+
+      // addedUser = addedUser.map(user => {
+      //   delete user.password;
+      //   return user;last_name;
+      // })
+      res.status(201).json(addedUser);
+    } catch (err) {
+      res.status(500).json({ message: "Error adding new user"});
+    }
+});
+
+app.put('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { first_name, last_name, username } = req.body;
+
+  try {
+    const updatedUser = await knex('users')
+      .where({ id: BigInt(id) })
+      .update({ first_name, last_name, username })
+      .returning('*');
+
+    if (updatedUser.length === 0) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred updating the user.' });
+  }
+});
+
+// Delete an item by ID
+app.delete('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await knex('users').where({ id }).del();
+    res.status(200).json({ message: 'User deleted successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred deleting user.' });
+  }
+});
+
 // Retrieve all items
 app.get('/items', async (req, res) => {
   try {
@@ -49,27 +118,41 @@ app.get('/items', async (req, res) => {
   }
 });
 
-// Create a new user
-app.post('/users', async (req, res) => {
-  const { first_name, last_name, username } = req.body;
+app.get('/items/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const newUser = await knex('users').insert({ first_name, last_name, username }).returning('*');
-    res.status(200).json(newUser);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred creating a new user.' });
+    const items = await knex('items')
+      .select('*')
+      .where('id', parseInt(id)); // Update the where clause
+    res.json(items);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error retrieving item data' });
   }
 });
 
 // Create a new item
 app.post('/items', async (req, res) => {
-  const { user_id, item_name, description, quantity } = req.body;
+  const { id, user_id, item_name, description, quantity } = req.body; // Add "id" to the destructured variables
   try {
-    const newItem = await knex('items').insert({ user_id, item_name, description, quantity }).returning('*');
-    res.status(200).json(newItem);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred creating a new item.' });
+    const newItem = {
+      id: parseInt(id), // Make sure id is present in the request body
+      user_id: user_id,
+      item_name: item_name,
+      description: description,
+      quantity: quantity,
+    };
+
+    let [addedItem] = await knex('items').insert(newItem).returning('*');
+
+    res.status(201).json(addedItem);
+  } catch (err) {
+    res.status(500).json({ message: 'Error adding new item' });
   }
 });
+
+
+
 
 // Update an item by ID
 app.put('/items/:id', async (req, res) => {

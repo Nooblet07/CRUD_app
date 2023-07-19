@@ -26,14 +26,18 @@ app.get('/', (req, res) => {
 })
 
 // Retrieve all users
-app.get('/users', async (req, res) => {
+app.get('/users/:id', async (req, res) => {
+  const {id} = req.params
   try {
-    const users = await knex('users').select();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred retrieving users.' });
-  }
-});
+    const user = await knex('users')
+    .select('*')
+    .where('id', BigInt(id))
+    res.json(user)
+  } catch (err){
+    console.log(err)
+    res.status(500).json({message:"Error retrieving user data"})
+    }
+})
 
 // Retrieve all items
 app.get('/items', async (req, res) => {

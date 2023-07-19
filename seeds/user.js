@@ -6,7 +6,7 @@ exports.seed = async function(knex) {
   // Deletes ALL existing entries
   await knex('users').del()
   await knex('users').insert([
-    {first_name: 'mike', last_name: 'green', username: 'mgreen'},
-    {first_name: 'samantha', last_name: 'shine', username: 'sshine'}
+    {id: BigInt(1) ,first_name: 'mike', last_name: 'green', username: 'mgreen'},
+    {id: BigInt(2) , first_name: 'samantha', last_name: 'shine', username: 'sshine'}
   ]);
 };

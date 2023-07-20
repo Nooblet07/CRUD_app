@@ -46,7 +46,7 @@ const LoginPage = () => {
       if (response.ok) {
         setUserId(data.id);
         // Redirect to the user page after successful login
-        navigate(`/users/${data.id}`);
+        navigate(`/users/:id`);
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message);

@@ -83,15 +83,11 @@ app.get('/users/:id', async (req, res) => {
 // Create a new user
 app.post('/users', async (req, res) => {
   const { first_name, last_name, username } = req.body;
-  // const hashedPass = await bcrypt.hashsync(password, 10)
     try{
       const newUser = {
-        // id: BigInt(id),
         first_name: first_name,
         last_name: last_name,
         username: username
-        // role_id: role_id
-        // password: hashedPass
       };
 
       let [addedUser] = await knex('users')

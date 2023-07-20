@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Outlet, useNavigate } from 'react-router-dom';
 import LoginPage from './Components/Login';
-import Login from './Components/Login'
+import CreateItem from './Components/CreateItem';
+import UpdateItem from './Components/UpdateItem'
 import UserPage from './Components/UserPage';
 import Cookies from 'js-cookie';
 import './index.css';
@@ -11,25 +12,24 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/users/:id" element={<UserPage />} />
-        {/* <Route path="/items" element={<UserPage />}/> */}
-        {/* Add other routes as needed */}
+        <Route path="/create-item" element={<CreateItem />} /> 
+        <Route path="/update-item/:itemId" element={<UpdateItem />} /> 
       </Routes>
     </Router>
   );
 }
 
-// A helper component for protected routes
-function PrivateRoute({ element }) {
-  const isAuthenticated = !!Cookies.get('token'); // Check if the user is authenticated
-  const navigate = useNavigate();
+// // A helper component for protected routes
+// function PrivateRoute({ element }) {
+//   const isAuthenticated = !!Cookies.get('token'); // Check if the user is authenticated
+//   const navigate = useNavigate();
 
-  if (!isAuthenticated) {
-    // Redirect to the login page if the user is not authenticated
-    navigate('/login');
-    return null;
-  }
+//   if (!isAuthenticated) {
+//     // Redirect to the login page if the user is not authenticated
+//     navigate('/login');
+//     return null;
+//   }
 
-  return <Outlet />;
-}
+// //   return <Outlet />;
+// }

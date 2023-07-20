@@ -11,8 +11,9 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/user" element={<UserPage />} />
+        {/* <Route path="/login" element={<Login />} /> */}
+        <Route path="/users/:id" element={<UserPage />} />
+        {/* <Route path="/items" element={<UserPage />}/> */}
         {/* Add other routes as needed */}
       </Routes>
     </Router>
@@ -32,5 +33,3 @@ function PrivateRoute({ element }) {
 
   return <Outlet />;
 }
-
-// export default App;

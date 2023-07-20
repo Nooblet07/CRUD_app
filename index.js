@@ -6,6 +6,7 @@ const knex = require('knex')(require('./knexfile.js')[process.env.NODE_ENV || 'd
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const morgan = require('morgan')
 
 // Create a PostgreSQL connection pool
 const pool = new Pool({
@@ -18,6 +19,7 @@ const pool = new Pool({
 
 app.use(express.json());
 app.use(cors());
+app.use(morgan('dev'))
 
 // app.listen(port, () => {
 //   console.log('Your Knex and Express application are running successfully!')

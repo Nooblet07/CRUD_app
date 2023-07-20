@@ -4,6 +4,8 @@ const port = process.env.PORT || 3030;
 const { Pool } = require('pg');
 const knex = require('knex')(require('./knexfile.js')[process.env.NODE_ENV || 'development']);
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Create a PostgreSQL connection pool
 const pool = new Pool({
@@ -20,6 +22,33 @@ app.use(cors());
 // app.listen(port, () => {
 //   console.log('Your Knex and Express application are running successfully!')
 // })
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+
+    if (user.rows.length === 0) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const match = await bcrypt.compare(password, user.rows[0].password);
+
+    if (!match) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate a JWT token for authenticated user (you can customize the token payload as needed)
+    const token = jwt.sign({ user_id: user.rows[0].id }, 'your_secret_key');
+
+    // Return the token to the client
+    res.json({ token });
+  } catch (error) {
+    console.error('An error occurred during login:', error);
+    res.status(500).json({ message: 'An error occurred during login' });
+  }
+});
 
 app.get('/', (req, res) => {
   res.send('Application is running')
@@ -150,9 +179,6 @@ app.post('/items', async (req, res) => {
     res.status(500).json({ message: 'Error adding new item' });
   }
 });
-
-
-
 
 // Update an item by ID
 app.put('/items/:id', async (req, res) => {

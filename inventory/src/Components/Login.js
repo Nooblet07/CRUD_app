@@ -1,36 +1,32 @@
-import { Card, Button } from 'flowbite-react';
-import { Link, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
 
 
-
-export default function UserLogin() {
-  const Navigate = useNavigate();
-  const [username, setUsername] = useState(null)
+const LoginPage = () => {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const signIn = async () => {
+  const navigate = useNavigate(); // Use useNavigate for navigation
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     try {
-      const response = await fetch('http://localhost:3030/login/validation', {
+      const response = await fetch('http://localhost:3030/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: username,
-          password: password
-        })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
-        const data = await response.json()
-
-        Cookies.set('token', data.token);
-        Cookies.set('id', data.id);
-        Navigate(`/users/${data.id}`);
+        // Redirect to the user page after successful login
+        navigate('/user');
       } else {
-        setToken(true);
-        setUsername('');
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
       }
     } catch (error) {
       console.error('An error occurred during login:', error);
@@ -38,22 +34,34 @@ export default function UserLogin() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card className="max-w-lg flex flex-col items-center">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Welcome to the DOD Evaluation System!
-        </h2>
-        {token && <p>User Authentication Failed</p>}
-        <input placeholder="Email" value={username} type="email" onChange={(e) => setUsername(e.target.value)} />
-        <input placeholder="Password" value={password} type="password" onChange={(e) => setPassword(e.target.value)} />
-        <Button onClick={() => signIn()}>Login</Button>
-        <div className="flex">
-          <p className="mr-2">Don't have an account?</p>
-          <Link to="/login/createAccount" className="text-blue-800">
-            Create Account
-          </Link>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleLogin}>
+        <h2>Login</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
-      </Card>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            // required
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
-}
+};
+
+export default LoginPage;

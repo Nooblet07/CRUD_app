@@ -1,3 +1,7 @@
+In order for this app to function, you will need to pull my database image from Docker Hub.  Log into your Docker Hub by using 'Docker login' in the command prompt. Once authenticated, type the following command to pull my database down 'docker pull nooblet07/inventory-db-image:latest'.  Once the database is pulled, run the following command to run the container on your machine 'docker run -d -p 5432:5432 --name my-database-container nooblet07/inventory-db-image:latest'
+
+
+
 Welcome to the Galvanize Inventory!  
 
 When you first navigate to the site, you can see all of the inventory items in the database. Unfortunately there is a 100 character limit in the description field, so in order to read the full description, click the "View Item" button.  Next you can log in with the following usernames and passwords:

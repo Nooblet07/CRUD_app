@@ -6,7 +6,6 @@ const knex = require('knex')(require('./knexfile.js')[process.env.NODE_ENV || 'd
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const morgan = require('morgan')
 
 // Create a PostgreSQL connection pool
 const pool = new Pool({
@@ -19,7 +18,7 @@ const pool = new Pool({
 
 app.use(express.json());
 app.use(cors());
-app.use(morgan('dev'))
+
 
 // app.listen(port, () => {
 //   console.log('Your Knex and Express application are running successfully!')
@@ -82,22 +81,26 @@ app.get('/users/:id', async (req, res) => {
 
 // Create a new user
 app.post('/users', async (req, res) => {
-  const { first_name, last_name, username } = req.body;
+  const { id, first_name, last_name, username, password } = req.body;
     try{
+      const hashedPass = await bcrypt.hash(password, 5);
       const newUser = {
+        id: BigInt(id),
         first_name: first_name,
         last_name: last_name,
-        username: username
+        username: username,
+        password: hashedPass
       };
+      console.log(req.body)
 
-      let [addedUser] = await knex('users')
+      let addedUser = await knex('users')
       .insert(newUser)
       .returning('*');
 
-      // addedUser = addedUser.map(user => {
-      //   delete user.password;
-      //   return user;last_name;
-      // })
+      addedUser = addedUser.map(user => {
+        delete user.password;
+        return user;
+      })
       res.status(201).json(addedUser);
     } catch (err) {
       res.status(500).json({ message: "Error adding new user"});

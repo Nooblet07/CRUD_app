@@ -6,6 +6,7 @@ import UpdateItem from './Components/UpdateItem'
 import UserPage from './Components/UserPage';
 import Cookies from 'js-cookie';
 import './index.css';
+import CreateAccount from './Components/CreateAccount';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/users/:id" element={<UserPage />} />
         <Route path="/create-item" element={<CreateItem />} /> 
         <Route path="/update-item/:itemId" element={<UpdateItem />} /> 
+        <Route path="/create-account" element={<CreateAccount />} />
       </Routes>
     </Router>
   );

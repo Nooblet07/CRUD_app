@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -56,6 +56,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleCreateAccount = () => {
+    navigate('/create-account');
+  };
+
   return (
     <div className="login-container">
       <h2>{username ? `Welcome ${username}` : 'Welcome Visitor'}</h2>
@@ -83,6 +87,9 @@ const LoginPage = () => {
           />
         </div>
         <button type="submit">Login</button>
+        <p>Don't have an account?{' '}
+        <Link to="/create-account">Create Account</Link>
+      </p>
       </form>
       <div className="items-container">
         {items.map((item) => (

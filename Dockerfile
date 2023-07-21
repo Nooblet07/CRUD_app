@@ -1,7 +1,11 @@
-FROM postgres:latest
+FROM node:14
 
-ENV POSTGRES_USER=postgres
-ENV POSTGRES_PASSWORD=docker
-ENV POSTGRE_DB=inventory
+WORKDIR /usr/src/app
 
-EXPOSE 5432
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "start"]

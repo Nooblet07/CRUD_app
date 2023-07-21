@@ -1,5 +1,8 @@
-In order for this app to function, you will need to pull my database image from Docker Hub.  Log into your Docker Hub by using 'Docker login' in the command prompt. Once authenticated, type the following command to pull my database down 'docker pull nooblet07/inventory-db-image:latest'.  Once the database is pulled, run the following command to run the container on your machine 'docker run -d -p 5432:5432 --name my-database-container nooblet07/inventory-db-image:latest'
+In order for this app to function, you will need to pull my database image from Docker Hub.  Log into your Docker Hub by using 'Docker login' in the command prompt. Once authenticated, type the following command to pull my database, and the denpendencies listed in th package.json file, down 'docker pull nooblet07/inventory-db-image:latest'.  Once the database is pulled, run the following command to run the container on your machine 'docker-compose up -d' .  That should get the database and all the dependencies required to run this app.
 
+Additionally you will need to install nodemon in order to run the start script for the index.js.
+
+npm install nodemon     (Additionally ensure that "start": "nodemon ./index.js", is listed in the package.json)
 
 
 Welcome to the Galvanize Inventory!  

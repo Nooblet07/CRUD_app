@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Card, Button } from 'flowbite-react';
+
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -7,6 +9,7 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [items, setItems] = useState([]);
   const [userId, setUserId] = useState('')
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const navigate = useNavigate(); // Use useNavigate for navigation
 
@@ -60,9 +63,25 @@ const LoginPage = () => {
     navigate('/create-account');
   };
 
+  //Limits the text length of the item's description
+function truncateText(text, maxLength) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text;
+}
+
+const handleViewItem = (item) => {
+  setSelectedItem(item);
+};
+
+// const handleSelectedItem = (item) => {
+//   setSelectedItem(item);
+// };
+
   return (
     <div className="login-container">
-      <h2>{username ? `Welcome ${username}` : 'Welcome Visitor'}</h2>
+      <h2>{'Welcome Visitor'}</h2>
       <form className="login-form" onSubmit={handleLogin}>
         <h2>Login</h2>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
@@ -91,17 +110,31 @@ const LoginPage = () => {
         <Link to="/create-account">Create Account</Link>
       </p>
       </form>
-      <div className="items-container">
-        {items.map((item) => (
-          <div key={item.id}>
-            <h3>Item Name: {item.item_name}</h3>
-            <p>Id: {item.id}</p>
-            <p>Description: {item.description}</p>
-            <p>Quantity: {item.quantity}</p>
+      <div className="items-and-selected-container">
+          <div className="items-container">
+            {items.map((item) => (
+              <div key={item.id}>
+                <h3>Item Name: {item.item_name}</h3>
+                <p>Id: {item.id}</p>
+                <p>Description: {truncateText(item.description, 100)}</p>
+                <p>Quantity: {item.quantity}</p>
+                <Button onClick={() => handleViewItem(item)}>View Item</Button>
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="selected-item-card">
+            {selectedItem && (
+              <Card>
+                <h3>Selected Item:</h3>
+                <p>Item Name: {selectedItem.item_name}</p>
+                <p>Id: {selectedItem.id}</p>
+                <p>Description: {selectedItem.description}</p>
+                <p>Quantity: {selectedItem.quantity}</p>
+              </Card>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
   );
 };
 

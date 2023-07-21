@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import ItemDetails from './ItemDetails';
+import { Card } from 'flowbite-react'
 
 const UserPage = () => {
   const [username, setUsername] = useState('');
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
   const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     // Fetch items from the database when the component mounts
@@ -85,25 +88,53 @@ const UserPage = () => {
     navigate(`/update-item/${itemId}`);
   };
 
+  const handleSelectItem = (item) => {
+    setSelectedItem(item);
+  };
+
+//Limits the text length of the item's description
+function truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  }
+
   return (
     <div className="user-page">
-      <h2>Welcome {username}</h2>
-      <div className="items-container">
-        {items.map((item) => (
-          <div key={item.id}>
-            <h3>Item Name: {item.item_name}</h3>
-            <p>Id: {item.id}</p>
-            <p>Description: {item.description}</p>
-            <p>Quantity: {item.quantity}</p>
-            <button onClick={() => handleUpdateItem(item.id)}>Update Item</button>
-            <button onClick={() => handleRemoveItem(item.id)}>Remove Item</button>
-          </div>
-        ))}
+      <h2 className="header">Welcome to the Galvanize Inventory</h2>
+      <div className="content">
+        <div className="items-container">
+          {items.map((item) => (
+            <div key={item.id}>
+              <h3>Item Name: {item.item_name}</h3>
+              <p>Id: {item.id}</p>
+              <p>Description: {truncateText(item.description, 100)}</p>
+              <p>Quantity: {item.quantity}</p>
+              <button onClick={() => handleUpdateItem(item.id)}>Update Item</button>
+              <button onClick={() => handleRemoveItem(item.id)}>Remove Item</button>
+              <button onClick={() => handleSelectItem(item)}>View Item</button>
+            </div>
+          ))}
+        </div>
+        <div className="selected-item-card">
+          {selectedItem && (
+            <Card>
+              <h3>Selected Item:</h3>
+              <p>Item Name: {selectedItem.item_name}</p>
+              <p>Id: {selectedItem.id}</p>
+              <p>Description: {selectedItem.description}</p>
+              <p>Quantity: {selectedItem.quantity}</p>
+              {/* Add more details here if needed */}
+            </Card>
+          )}
+        </div>
       </div>
-      <Link to="/create-item">Add Item</Link> {/* Add this line for the "Add Item" button */}
+      <Link to="/create-item">Add Item</Link>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
+
 
 export default UserPage;

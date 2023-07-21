@@ -4,9 +4,9 @@ import LoginPage from './Components/Login';
 import CreateItem from './Components/CreateItem';
 import UpdateItem from './Components/UpdateItem'
 import UserPage from './Components/UserPage';
-import Cookies from 'js-cookie';
 import './index.css';
 import CreateAccount from './Components/CreateAccount';
+import ViewItem from './Components/ViewItem';
 
 export default function App() {
   return (
@@ -17,6 +17,7 @@ export default function App() {
         <Route path="/create-item" element={<CreateItem />} /> 
         <Route path="/update-item/:itemId" element={<UpdateItem />} /> 
         <Route path="/create-account" element={<CreateAccount />} />
+        {/* <Route path="/items/itemId" element={<ViewItem />} /> */}
       </Routes>
     </Router>
   );

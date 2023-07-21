@@ -7,7 +7,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Create a PostgreSQL connection pool
+
 const pool = new Pool({
   user: 'postgres',
   host: '127.0.0.1',
@@ -18,11 +18,6 @@ const pool = new Pool({
 
 app.use(express.json());
 app.use(cors());
-
-
-// app.listen(port, () => {
-//   console.log('Your Knex and Express application are running successfully!')
-// })
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -40,10 +35,8 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate a JWT token for authenticated user (you can customize the token payload as needed)
     const token = jwt.sign({ user_id: user.rows[0].id }, 'your_secret_key');
 
-    // Return the token to the client
     res.json({ token });
   } catch (error) {
     console.error('An error occurred during login:', error);
@@ -153,7 +146,7 @@ app.get('/items/:id', async (req, res) => {
   try {
     const items = await knex('items')
       .select('*')
-      .where('id', parseInt(id)); // Update the where clause
+      .where('id', parseInt(id));
     res.json(items);
   } catch (err) {
     console.log(err);
@@ -163,10 +156,10 @@ app.get('/items/:id', async (req, res) => {
 
 // Create a new item
 app.post('/items', async (req, res) => {
-  const { id, user_id, item_name, description, quantity } = req.body; // Add "id" to the destructured variables
+  const { id, user_id, item_name, description, quantity } = req.body;
   try {
     const newItem = {
-      id: parseInt(id), // Make sure id is present in the request body
+      id: parseInt(id),
       user_id: user_id,
       item_name: item_name,
       description: description,

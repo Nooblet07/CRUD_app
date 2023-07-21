@@ -75,10 +75,6 @@ const handleViewItem = (item) => {
   setSelectedItem(item);
 };
 
-// const handleSelectedItem = (item) => {
-//   setSelectedItem(item);
-// };
-
   return (
     <div className="login-container">
       <h2>{'Welcome Visitor'}</h2>

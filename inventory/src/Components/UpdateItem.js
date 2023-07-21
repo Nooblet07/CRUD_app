@@ -10,7 +10,6 @@ const UpdateItem = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the item details when the component mounts
     fetchItemDetails();
   }, []);
 

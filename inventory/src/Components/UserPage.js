@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import ItemDetails from './ItemDetails';
 import { Card } from 'flowbite-react'
 
 const UserPage = () => {
@@ -51,7 +50,6 @@ const UserPage = () => {
   };
 
   const handleLogout = () => {
-    // Clear the user's token from cookies
     Cookies.remove('token');
 
     // Redirect to the login page
@@ -84,7 +82,6 @@ const UserPage = () => {
   };
 
   const handleUpdateItem = (itemId) => {
-    // For simplicity, we'll just navigate to the update item page with the itemId as a parameter
     navigate(`/update-item/${itemId}`);
   };
 

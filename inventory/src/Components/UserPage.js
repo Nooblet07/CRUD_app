@@ -103,6 +103,10 @@ function truncateText(text, maxLength) {
   return (
     <div className="user-page">
       <h2 className="header">Welcome to the Galvanize Inventory</h2>
+      <div className="user-header">
+        <Link to="/create-item">Add Item</Link>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
       <div className="content">
         <div className="items-container">
           {items.map((item) => (
@@ -130,8 +134,8 @@ function truncateText(text, maxLength) {
           )}
         </div>
       </div>
-      <Link to="/create-item">Add Item</Link>
-      <button onClick={handleLogout}>Logout</button>
+      {/* <Link to="/create-item">Add Item</Link>
+      <button onClick={handleLogout}>Logout</button> */}
     </div>
   );
 };
